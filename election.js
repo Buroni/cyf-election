@@ -6,22 +6,69 @@
  * 1 - Convert candidates object to array
  */
 function candidatesObjToArray(candidates) {
+    // var result = Object.keys(candidates).map(function(key) {
+        
+        
+        // return [Number(key), candidates[key]];
+    //   });
+     var result = [];
+     for(let i = 1 ; i<5; i++){
+         result.push(candidates[i]);
+         
+     }
+    return result;
+      
+      
+    }
+    
+    
 
-}
 
 /**
  * 2 - Remove any voters who have voted for more than 2 people, or have voted for the same person twice.
 */
 function filterInvalidVoters(voters) {
+        var valideCast = voters.filter(function(voter) {
+          
+        if(voter.votingCard.length <= 2 ){ 
+            if(voter.votingCard[0]!== voter.votingCard[1]){
 
-}
+            return voter;
+            }
+            
+          } 
+        
+       })  
+       return valideCast;
+    }
+
+        
+
+
+    
+
+
 
 /**
  * 3 - Add up all the votes cast by the voting population. Note that for two adjacent votes in the vote array,
  * the right vote counts for half of the left vote.
  */
-function runElection(voters, candidates) {
+function runElection(validVoters, candidates) {
+  validVoters.forEach(voter => {
+      const firstCandidateId = voter.votingCard[0]
+      const secondCandidateId = voter.votingCard[1]
+    //   voter.votingCard.forEach(vote => {
+        //   console.log(vote)
+          candidates[firstCandidateId].numVotes +=1;
+          candidates[secondCandidateId].numVotes += 0.5;
+          
+        //   console.log(candidates[]);
+       
 
+      
+      });
+      return candidates;
+      
 }
 
 /**
@@ -30,7 +77,17 @@ function runElection(voters, candidates) {
  * Desired return value: {name: "Tamara Faiza", age: 46, party: "Pizza Party", numVotes: 3}
  */
 function getWinner(candidates) {
+    let max = 0;
+    let maxCandidate = null;
+    const candidatesArray = candidatesObjToArray(candidates);
+    candidatesArray.forEach(candidate =>{ 
+        if(candidate.numVotes > max){
+            max = candidate.numVotes;
+            maxCandidate =  candidate;
+        }
+    })
 
+    return maxCandidate;
 }
 
 /**
@@ -38,7 +95,10 @@ function getWinner(candidates) {
  * he/she received
  */
 function winnerMessage(winner) {
-
+    // winner.forEach(maxwinner =>{ 
+        console.log(winner)
+        return  `${winner.name} has won the election with ${winner.numVotes} votes!`
+    // })
 }
 
 // A sample population of a small number of voters, stored as an array
@@ -56,7 +116,7 @@ let candidates = {
     1: {name: 'Tamara Faiza', age: 46, votingCard: [1,1], party: 'Pizza Party', numVotes: 0},
     2: {name: 'Aylin Duke', age: 39, votingCard: [2,2], party: 'Foam Party', numVotes: 0},
     3: {name: 'Clay Roderick', age: 54, votingCard: [3,4], party: 'Flat Earth Party', numVotes: 0},
-    4: {name: 'Nour al-Din', age: 32, votingCard: [4,3], party: 'Pizza Party', numVotes: 0}
+    4: {name: 'Nour al-Din', age: 32, votingCard: [4,1], party: 'Pizza Party', numVotes: 0}
 };
 
 let allVoters = votingPopulation.concat(candidatesObjToArray(candidates));
@@ -66,4 +126,12 @@ let validVoters = filterInvalidVoters(allVoters);
 candidates = runElection(validVoters, candidates);
 
 let winner = getWinner(candidates);
+
+module.exports = {
+  candidatesObjToArray,
+  filterInvalidVoters,
+  runElection,
+  getWinner,
+  winnerMessage
+}
 
